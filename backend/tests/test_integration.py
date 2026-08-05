@@ -103,6 +103,23 @@ def test_repair_auto_verifies_from_telemetry(system):
     assert closed[0].verified_at is not None
 
 
+def test_repair_with_unknown_key_does_not_restore_everything(system):
+    det, sim = system
+
+    async def go():
+        info = await sim.inject_span(deliver_prob=1.0)
+        await det.run()
+        assert len(_active(det)) == 1
+        await sim.repair(key="unknown:key")
+        await det.run()
+        return info
+
+    info = _run(go())
+    active = _active(det)
+    assert len(active) == 1
+    assert active[0].incident_key == info["incident_key"]
+
+
 def test_marking_resolved_while_dark_is_rejected(system):
     det, sim = system
     from app import tickets as tk

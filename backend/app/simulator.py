@@ -209,8 +209,11 @@ class Simulator:
     # ---- repair ---------------------------------------------------------
     async def repair(self, key=None, dt_id=None) -> dict:
         keys = []
-        if key and key in self.active:
-            keys = [key]
+        if key is not None:
+            if key in self.active:
+                keys = [key]
+            else:
+                keys = []
         elif dt_id:
             keys = [k for k in self.active if k.startswith(f"{dt_id}:")]
         else:
