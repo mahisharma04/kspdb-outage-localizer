@@ -67,7 +67,7 @@ def mark_resolved(session, ticket: Ticket, store, note: str | None = None) -> di
     add_event(session, ticket, "resolved_rejected",
               f"Crew marked resolved but only {prog:.0%} of poles are live — kept open. {note or ''}".strip())
     return {"accepted": False, "status": ticket.status, "restoration_progress": ticket.restoration_progress,
-            "message": f"Not closed: telemetry still shows {1 - prog:.0%} of poles dark."}
+            "message": "Cannot close the ticket; not all poles are live."}
 
 
 def auto_verify_if_restored(session, ticket: Ticket, store) -> bool:
