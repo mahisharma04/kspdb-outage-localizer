@@ -1,0 +1,37 @@
+# One command brings up the whole stack:  docker compose up
+#
+# - db:  PostgreSQL, with a healthcheck so the app waits for it.
+# - app: FastAPI (backend) + the built React console, on http://localhost:8000
+#
+# The app seeds a synthetic network on first startup (no manual migration
+# step), so opening http://localhost:8000 shows a working system immediately.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: kspdb
+      POSTGRES_PASSWORD: kspdb
+      POSTGRES_DB: kspdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kspdb -d kspdb"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://kspdb:kspdb@db:5432/kspdb
+      # Uncomment to enable the LLM dispatch briefing (otherwise a deterministic
+      # template is used — the app works fully without any key):
+      # OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:
