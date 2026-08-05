@@ -47,9 +47,7 @@ No API keys are required. Full details and troubleshooting: **[DEPLOYMENT.md](DE
 
 ## Live demo & video
 
-- **Live URL:** _<PASTE YOUR PUBLIC URL — e.g. https://kspdb-outage-localizer.onrender.com>_
-  (free tier; may cold-start for ~30–60 s on first hit — please wait rather than
-  assume it is down)
+- **Live URL:** https://kspdb-outage-localizer-sd5c.onrender.com (free tier; may cold-start for ~30–60 s on first hit — please wait rather than assume it is down)
 - **5-minute demo video:** _<PASTE LOOM / YOUTUBE-UNLISTED / DRIVE LINK>_
 
 ## Try it in 30 seconds (from the console)
