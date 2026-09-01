@@ -22,6 +22,7 @@ export const api = {
   resolve: (id, note) => j('POST', `/api/tickets/${id}/resolve`, { note }),
   // simulator
   simSpan: () => j('POST', '/api/sim/span', { deliver_prob: 0.7 }),
+  simWeakSpan: () => j('POST', '/api/sim/span', { deliver_prob: 0.15, confidence_mode: 'weak' }),
   simDt: () => j('POST', '/api/sim/dt', { deliver_prob: 0.7 }),
   simFeeder: () => j('POST', '/api/sim/feeder', { deliver_prob: 0.7 }),
   simDeadSensor: () => j('POST', '/api/sim/dead-sensor', {}),

@@ -110,7 +110,9 @@ class Simulator:
         return darkened
 
     # ---- fault injection ------------------------------------------------
-    async def inject_span(self, dt_id=None, from_pole=None, to_pole=None, deliver_prob=0.7) -> dict:
+    async def inject_span(self, dt_id=None, from_pole=None, to_pole=None, deliver_prob=0.7, confidence_mode="normal") -> dict:
+        if confidence_mode == "weak":
+            deliver_prob = min(deliver_prob, 0.15)
         if to_pole is None:
             dt_id = dt_id or self.rng.choice([d for d, ps in self.dt_poles.items() if len(ps) >= 8])
             # pick a non-root pole with a decent subtree for a clear span fault
@@ -127,25 +129,33 @@ class Simulator:
         self.active[key] = darkened
         return {"type": "span", "dt_id": dt_id, "from_pole": from_pole, "to_pole": to_pole,
                 "downstream_poles": len(region), "darkened_devices": len(darkened),
+                "deliver_prob": deliver_prob, "confidence_mode": confidence_mode,
                 "incident_key": key}
 
-    async def inject_dt(self, dt_id=None, deliver_prob=0.7) -> dict:
+    async def inject_dt(self, dt_id=None, deliver_prob=0.7, confidence_mode="normal") -> dict:
+        if confidence_mode == "weak":
+            deliver_prob = min(deliver_prob, 0.15)
         dt_id = dt_id or self.rng.choice(list(self.dt_poles))
         region = list(self.dt_poles[dt_id])
         darkened = await self._darken(region, deliver_prob)
         key = f"{dt_id}:dt"
         self.active[key] = darkened
         return {"type": "dt", "dt_id": dt_id, "poles": len(region),
-                "darkened_devices": len(darkened), "incident_key": key}
+                "darkened_devices": len(darkened), "deliver_prob": deliver_prob,
+                "confidence_mode": confidence_mode, "incident_key": key}
 
-    async def inject_feeder(self, feeder_id=None, deliver_prob=0.7) -> dict:
+    async def inject_feeder(self, feeder_id=None, deliver_prob=0.7, confidence_mode="normal") -> dict:
+        if confidence_mode == "weak":
+            deliver_prob = min(deliver_prob, 0.15)
         feeder_id = feeder_id or self.rng.choice(list(self.feeder_dts))
         region = [p for d in self.feeder_dts[feeder_id] for p in self.dt_poles[d]]
         darkened = await self._darken(region, deliver_prob)
         key = f"{feeder_id}:feeder"
         self.active[key] = darkened
         return {"type": "feeder", "feeder_id": feeder_id, "dts": len(self.feeder_dts[feeder_id]),
-                "poles": len(region), "darkened_devices": len(darkened), "incident_key": key}
+                "poles": len(region), "darkened_devices": len(darkened),
+                "deliver_prob": deliver_prob, "confidence_mode": confidence_mode,
+                "incident_key": key}
 
     # ---- noise ----------------------------------------------------------
     async def inject_dead_sensor(self, pole_id=None) -> dict:

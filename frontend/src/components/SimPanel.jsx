@@ -4,6 +4,7 @@ export default function SimPanel({ onRun }) {
       <h3>Fault simulator</h3>
       <div className="grid">
         <button onClick={() => onRun('span')}>Span fault</button>
+        <button onClick={() => onRun('weakSpan')}>Weak span</button>
         <button onClick={() => onRun('dt')}>DT fault</button>
         <button onClick={() => onRun('feeder')}>Feeder fault</button>
         <button onClick={() => onRun('deadSensor')}>Dead sensor</button>

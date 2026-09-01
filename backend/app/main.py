@@ -198,17 +198,17 @@ def add_scheduled(o: ScheduledOutageIn):
 # ==========================================================================
 @app.post("/api/sim/span")
 async def sim_span(f: SpanFaultIn):
-    return await simulator.inject_span(f.dt_id, f.from_pole, f.to_pole, f.deliver_prob)
+    return await simulator.inject_span(f.dt_id, f.from_pole, f.to_pole, f.deliver_prob, f.confidence_mode)
 
 
 @app.post("/api/sim/dt")
 async def sim_dt(f: DTFaultIn):
-    return await simulator.inject_dt(f.dt_id, f.deliver_prob)
+    return await simulator.inject_dt(f.dt_id, f.deliver_prob, f.confidence_mode)
 
 
 @app.post("/api/sim/feeder")
 async def sim_feeder(f: FeederFaultIn):
-    return await simulator.inject_feeder(f.feeder_id, f.deliver_prob)
+    return await simulator.inject_feeder(f.feeder_id, f.deliver_prob, f.confidence_mode)
 
 
 @app.post("/api/sim/dead-sensor")

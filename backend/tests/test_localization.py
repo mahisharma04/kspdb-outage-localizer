@@ -9,6 +9,7 @@ confidence behaviour.
 from __future__ import annotations
 
 from app.localization import DARK, LIVE, UNKNOWN, localize
+from app.schemas import SpanFaultIn
 from tests.helpers import GraphBuilder, line_dt
 
 
@@ -160,3 +161,8 @@ def test_silence_without_power_lost_lowers_confidence():
     with_corr = localize(g, st, corroborated={"P3"})[0].confidence
     without_corr = localize(g, st, corroborated=set())[0].confidence
     assert without_corr < with_corr
+
+
+def test_weak_confidence_mode_is_exposed_in_api_model():
+    payload = SpanFaultIn(confidence_mode="weak")
+    assert payload.confidence_mode == "weak"

@@ -43,16 +43,19 @@ class SpanFaultIn(BaseModel):
     from_pole: str | None = None      # upstream pole; fault on edge (from -> to)
     to_pole: str | None = None        # downstream head that goes dark
     deliver_prob: float = 0.7         # fraction of dying 'power_lost' packets that arrive
+    confidence_mode: str = "normal"  # normal | weak
 
 
 class DTFaultIn(BaseModel):
     dt_id: str | None = None
     deliver_prob: float = 0.7
+    confidence_mode: str = "normal"
 
 
 class FeederFaultIn(BaseModel):
     feeder_id: str | None = None
     deliver_prob: float = 0.7
+    confidence_mode: str = "normal"
 
 
 class RepairIn(BaseModel):

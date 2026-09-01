@@ -65,6 +65,7 @@ export default function App() {
     try {
       let r
       if (kind === 'span') r = await api.simSpan()
+      else if (kind === 'weakSpan') r = await api.simWeakSpan()
       else if (kind === 'dt') r = await api.simDt()
       else if (kind === 'feeder') r = await api.simFeeder()
       else if (kind === 'deadSensor') r = await api.simDeadSensor()
@@ -133,6 +134,7 @@ export default function App() {
 function simMsg(kind, r) {
   if (!r) return 'done'
   if (kind === 'span') return `Span fault injected: ${r.from_pole} → ${r.to_pole} (${r.downstream_poles} poles downstream)`
+  if (kind === 'weakSpan') return `Weak-confidence span fault injected: ${r.from_pole} → ${r.to_pole} (deliver_prob=${r.deliver_prob})`
   if (kind === 'dt') return `DT fault injected on ${r.dt_id} (${r.poles} poles)`
   if (kind === 'feeder') return `Feeder fault injected on ${r.feeder_id} (${r.dts} DTs)`
   if (kind === 'deadSensor') return `Dead-sensor injected at ${r.pole_id} — should NOT raise an outage`
